@@ -1,0 +1,475 @@
+<!--<section class="hero is-primary is-bold" xmlns="http://www.w3.org/1999/html">-->
+<!--  <div class="hero-body">-->
+<!--    <div class="container has-text-centered">-->
+<!--      <p class="title">Logo sequence creator</p>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!-- colors light: F2F2F2, darker green: 3B945E, lighter green: 75BA98, blue: 65CCB8, dark: 182628 -->
+
+
+<nav class="navbar" role="navigation" aria-label="dropdown navigation">
+  <a style class="navbar-item has-background-primary">
+    <strong>Logo sequence creator</strong>
+    <!--      background-color="3B945E", color=""182628-->
+  </a>
+
+  <div class="navbar-item has-dropdown is-active">
+
+    <div class="navbar">
+      <a class="navbar-item">
+        Co to jest logo sekwencji?</a>
+      <a class="navbar-item">
+        Jak posługiwać się kreatorem?</a>
+      <hr class="navbar-divider">
+      <div class="navbar-item">
+        Version 0.9.3
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="file has-name mt-6 is-justify-content-center">
+  <div class="content">
+    <h2 class="has-text-info">Witaj w kreatorze logo sekwencji</h2>
+    <div class="divider is-info is-light is-full">
+    </div>
+    <p class="is-info">Tutaj będzie krótki opis po co powstała aplikacja.</p>
+  </div>
+</div>
+
+<div class="file has-name mt-6 is-justify-content-center">
+  <div class="content">
+    <h2 class="has-text-centered has-text-info">Jak posługiwać się kreatorem?</h2>
+    <div class="divider is-info is-light is-full"></div>
+    <p>Tu będzie opis jak posługiwać się narzędziem.</p>
+  </div>
+</div>
+
+<div class="file has-name mt-6 is-justify-content-center">
+  <div class="content">
+    <h2 class="has-text-centered has-text-info">Stwórz logo</h2>
+    <div class="divider is-info is-light is-full">
+    </div>
+  </div>
+</div>
+
+
+<div class="container is-widescreen">
+
+
+  <div class="columns">
+
+    <!--    Blok wybrania pliku-->
+    <div class="column">
+      <div class="file is-info has-name is-medium is-centered mb-5 is-fullwidth">
+        <label class="file-label">
+          <input class="file-input" type="file" name="resume">
+          <span class="file-cta">
+      <span class="file-icon">
+        <i class="fas fa-upload"></i>
+      </span>
+      <span class="file-label is-info">
+        Wybierz plik z dysku
+      </span>
+    </span>
+          <span class="file-name">
+      Nie wybrano pliku
+    </span>
+        </label>
+      </div>
+
+      <!--Blok wpisania sekwencji-->
+      <div class="control">
+        <textarea class="textarea is-info is-light" placeholder="Lub wpisz sekwencję tutaj"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns">
+
+    <!--    First column-->
+    <div class="column">
+      <div class="content">
+        <h4 class="has-text-centered has-text-info">Format i rozmiar obrazu</h4>
+
+      </div>
+      <div class="divider is-info is-light is-full">
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label is-info has-text-info mr-4 is-primary">Format wyjściowy*</label>
+
+        <div class="select is-info">
+          <select>
+            <option>Obraz wektorowy</option>
+            <option>JPG</option>
+            <option>PNG</option>
+
+          </select>
+        </div>
+
+      </div>
+
+      <div class="field is-horizontal">
+
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info mr-4">Rozmiar logo</label>
+
+        <div class="control">
+          <input class="input is-info is-left mb-2" type="number" style="width: 80px">
+        </div>
+        <p class="m-2">x</p>
+        <div class="control">
+          <input class="input is-info is-left" type="number" style="width: 80px">
+        </div>
+        <p class="m-2"></p>
+        <div class="select is-info">
+          <select>
+            <option>cm</option>
+            <option>piksele</option>
+
+          </select>
+        </div>
+      </div>
+
+
+      <div class="content">
+        <h4 class="has-text-centered has-text-info">Dodatkowe opcje obrazu</h4>
+      </div>
+
+      <div class="divider is-info is-light is-full">
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Tytuł</label>
+        <div class="control">
+          <input class="input is-info" type="text" placeholder="x">
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Czy ukryć oś X?</label>
+        <label class="checkbox">
+          <input type="checkbox">
+          Ukryj
+        </label>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Czy ukryć oś Y?</label>
+        <label class="checkbox">
+          <input type="checkbox">
+          Ukryj
+        </label>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Podpis osi X</label>
+        <div class="control">
+          <input class="input is-info" type="text" placeholder="x">
+        </div>
+      </div>
+
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Podpis osi Y</label>
+        <div class="control">
+          <input class="input is-info" type="text" placeholder="x">
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Skala osi Y</label>
+        <div class="control">
+          <input class="input is-info" type="number" placeholder="x">
+        </div>
+
+
+
+    </div>
+      </div>
+
+    <div class="divider is-info is-light is-vertical is is-fullv"></div>
+    <!--    Second column-->
+    <div class="column">
+
+      <div class="content">
+        <h4 class="has-text-centered has-text-info">Opcje loga</h4>
+      </div>
+
+      <div class="divider is-info is-light is-full">
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Typ sekwencji</label>
+
+        <div class="select is-info">
+          <select>
+            <option>auto</option>
+            <option>proteina</option>
+            <option>DNA</option>
+            <option>RNA</option>
+
+          </select>
+        </div>
+
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4">Numer pierwszej pozycji</label>
+        <div class="control">
+          <input class="input is-info" type="text" placeholder="x">
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info	mr-4 mb-2">Jednostka</label>
+
+        <div class="select is-info">
+          <select>
+            <option>prawdopodobieństwo</option>
+            <option>bity</option>
+            <option>naty</option>
+            <option>kT</option>
+
+          </select>
+        </div>
+
+
+      </div>
+
+
+      <div class="content">
+        <h4 class="has-text-centered has-text-info">Kolory</h4>
+      </div>
+
+      <div class="divider is-info is-light is-full">
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="icon-text">
+          <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+            <i class="fas fa-info-circle"></i>
+          </i>
+        </div>
+
+        <label class="label has-text-info">Paleta barw</label>
+      </div>
+
+      <div class="control mb-2">
+        <label class="radio">
+          <input type="radio" name="rsvp">
+          Domyślna (wpisz wartości poniżej)
+        </label>
+        <label class="radio">
+          <input type="radio" name="rsvp">
+          Czarno-biała
+        </label>
+        <label class="radio">
+          <input type="radio" name="rsvp">
+          Własna
+        </label>
+      </div>
+
+
+      <div class="columns">
+        <div class="column">
+          <div class="icon-text">
+            <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+              <i class="fas fa-info-circle"></i>
+            </i>
+
+            <label class="label has-text-info">Symbole</label>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+          </div>
+        </div>
+
+
+        <div class="column">
+          <div class="icon-text">
+            <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+              <i class="fas fa-info-circle"></i>
+            </i>
+
+            <label class="label has-text-info">Kolor</label>
+
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="icon-text">
+            <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+              <i class="fas fa-info-circle"></i>
+            </i>
+
+            <label class="label has-text-info">RGB</label>
+
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+            <div class="control">
+              <input class="input is-info" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <!--Buttons-->
+  <div class="columns">
+    <div class="column is-two-thirds">
+      <div class="buttons">
+        <button class="button is-info is-rounded is-fullwidth">Stwórz logo</button>
+      </div>
+    </div>
+    <div class="column">
+      <div class="buttons">
+        <button class="button is-info is-light is-rounded is-fullwidth">Wyczyść</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!--<aside class="menu">-->
+  <!--  <p class="menu-label">-->
+  <!--    Menu-->
+  <!--  </p>-->
+  <!--  <ul class="menu-list">-->
+  <!--    <li><a>Co to jest logo sekwencji?</a></li>-->
+  <!--    <li><a>Jak posługiwać się kreatorem?</a></li>-->
+  <!--    <li><a>Dostępne opcje</a></li>-->
+  <!--  </ul>-->
+
+  <!--<div class="columns">-->
+  <!--  <div class="column">-->
+  <!--    <div class="content px-6">-->
+  <!--      <h3 class="has-text-centered has-text-info">Co to jest logo sekwencji?</h3>-->
+  <!--      <article class="message is-info">-->
+  <!--        <div class="message-body">-->
+  <!--          Opis.-->
+  <!--        </div>-->
+  <!--      </article>-->
+
+  <!--    </div>-->
+  <!--  </div>-->
+
+  <!--  <div class="column">-->
+  <!--    <div class="content px-6">-->
+  <!--      <h3 class="has-text-centered has-text-info">Jak posługiwać się kreatorem?</h3>-->
+  <!--      <article class="message is-info">-->
+  <!--        <div class="message-body">-->
+  <!--          Opis.-->
+  <!--        </div>-->
+  <!--      </article>-->
+
+  <!--    </div>-->
+  <!--  </div>-->
+  <!--</div>-->

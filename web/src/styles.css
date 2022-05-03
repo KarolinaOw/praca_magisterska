@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@creativebulma/bulma-divider";
+@import "~@creativebulma/bulma-tooltip";
+@import "~@fortawesome/fontawesome-free/css/fontawesome.min.css";
+@import "~@fortawesome/fontawesome-free/css/solid.min.css";
+@import "~@fortawesome/fontawesome-free/css/brands.min.css";
+
+.divider.is-full::before {
+  margin-right: 0;
+}
+
+.divider.is-full::after {
+  margin-left: 0;
+}
+
+.divider.is-fullv::before {
+  margin-bottom: 0;
+}
+
+.divider.is-fullv::after {
+  margin-top: 0;
+}
