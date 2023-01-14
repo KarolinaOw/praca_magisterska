@@ -1,12 +1,7 @@
 import { Component } from '@angular/core';
+import {Color, ColorScheme, LogoRequest, SequenceType} from "./logoRequest";
 
-type OutputFormat = 'vector' | 'JPG' | 'PDF';
-type SequenceType = 'auto' | 'protein' | 'dna' | 'rna';
-type LogoUnit = 'bits' | 'probability' | 'nats' | 'kT';
-type ColorScheme = 'auto' | 'monochrome' | 'custom';
-type Color = 'red' | 'blue' | 'green' | 'yellow' | 'purple' | 'orange';
-
-interface SymbolColor{
+interface SymbolColor {
   symbol: string;
   color: Color;
   rgb: string;
@@ -18,26 +13,26 @@ interface SymbolColor{
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title : 'web';
-  input_data: string;
-  output_format : OutputFormat;
-  logo_size_x : number;
-  logo_size_y : number;
-  logo_title : string;
-  hide_axis_x : boolean;
-  hide_axis_y : boolean;
-  axis_x_title : string;
-  axis_y_title : string;
-  axis_y_scale: number;
-  sequence_type : SequenceType;
-  first_position_number: number;
-  unit: LogoUnit;
-  color_scheme: ColorScheme;
-  symbol_colors: SymbolColor[] = [];
+export class AppComponent{
+  logoRequest: LogoRequest = new LogoRequest();
 
+  sequenceTypes: SequenceType[] = ['auto', 'aminoAcid', 'dna', 'rna'];
+  colorSchemes: ColorScheme[] = ['auto', 'monochrome'];
+  submitted = false;
   onSubmit() {
+    console.log(JSON.stringify(this.logoRequest));
+    this.submitted = true;
+    // const req = http.get<>('/api/');
+    // req.subscribe();
 
+  }
+
+  onColorSelectionChange(entry: ColorScheme): void {
+    this.logoRequest.colors = entry;
+  }
+
+  toDefaultValues(): void {
+    this.logoRequest = new LogoRequest();
   }
 
 }
