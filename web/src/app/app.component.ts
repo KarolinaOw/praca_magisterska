@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Color, ColorScheme, LogoRequest, SequenceType} from "./logoRequest";
+import {Title} from "@angular/platform-browser";
 
 interface SymbolColor {
   symbol: string;
@@ -14,6 +15,10 @@ interface SymbolColor {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent{
+
+  constructor(private titleService: Title) {
+    this.titleService.setTitle($localize `${this.titleService}`);
+  }
   logoRequest: LogoRequest = new LogoRequest();
 
   sequenceTypes: SequenceType[] = ['auto', 'aminoAcid', 'dna', 'rna'];

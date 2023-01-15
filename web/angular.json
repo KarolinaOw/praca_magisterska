@@ -1,10 +1,20 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "web": {
-      "projectType": "application",
+        "i18n-receipt-demo": {
+          "i18n": {
+            "sourceLocale": "pl-PL",
+            "locales": {"en-GB": "src/locale/messages.en.xlf"}
+          }
+        },
+    "web":
+    {
+      "projectType": "application" ,
       "schematics": {
         "@schematics/angular:application": {
           "strict": true

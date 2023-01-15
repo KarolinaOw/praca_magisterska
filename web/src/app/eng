@@ -1,0 +1,52 @@
+
+
+Logo sequence creator
+
+Welcome in sequence logo creator
+Tutaj będzie krótki opis po co powstała aplikacja.
+
+How to use the tool?
+To create the logo, load the file with the sequences of interest or enter them in the dialog box. Then (optionally) select additional available options.
+
+
+<!--    Blok wybrania pliku-->
+Upload file from computer
+No file chosen
+
+<!--Blok wpisania sekwencji-->
+Opis tej opcji.
+Or type sequence here
+
+Logo Options
+Choose sequence type - data can be of "amino acid" or "DNA" or "RNA".
+Sequence Type
+
+auto
+amino acid
+DNA
+RNA
+
+The integer label of the first residue in multiple sequence alignment.
+First Position Number
+
+<!--    Second column-->
+Image Options
+Here you can give your logo a title.
+Title
+
+Here you can customize your x-axis's label. The default is "Position".
+X-Axis Label
+
+Here you can customize your y-axis's label. The default is "Position".
+Y-Axis Label
+
+Choose color scheme - the default colors are orange (G), red (T/U), blue (C) and green (A) for nucleic acids
+and green (G,S,T,Y,C,Q,N), blue (K,R,H), red (D,E) and black (A,V,L,I,P,W,F,M) for amino acids. Choose Black&White option to color all symbols black.
+Color Scheme
+Default
+Black&White
+
+<!--Buttons-->
+Create logo
+Reset
+
