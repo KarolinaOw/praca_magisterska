@@ -12,7 +12,15 @@ import sys
 
 session = SparkSession.builder.master('local[*]').appName('Logo Generator').getOrCreate()
 
-filename = "gs://logo-seq-creator/logo-requests/input-files/01c0eae5-4553-4f04-9b53-2bec824e1ec9"
+parser = argparse.ArgumentParser()
+parser.add_argument("--filename")
+args = parser.parse_args()
+if args.filename:
+    filename = args.filename
+else:
+    raise Exception("No data")
+
+print("Loading input file " + filename)
 
 data = session.read.csv(filename)
 data.show()
