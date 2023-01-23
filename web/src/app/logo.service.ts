@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from "./environment";
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { LogoRequest } from './logoRequest';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {LogoParameters, LogoRequest} from './model';
+import {mergeMap, Observable} from 'rxjs';
+import {DataFileHandle} from "./dataFileHandle";
 
 
 @Injectable({
@@ -18,10 +19,25 @@ export class LogoService {
     })
   }
 
-  constructor(private httpClient: HttpClient) { }
-
-  create(logoRequest: any): Observable<any> {
-    return this.httpClient.post<LogoRequest>(`${this.URL}`, logoRequest, this.httpOptions);
+  constructor(private httpClient: HttpClient) {
   }
 
+  createLogoFromRawData(logoParameters: LogoParameters, data: string): void {
+    this.uploadDataRawRequest(data)
+      .pipe(mergeMap(fileHandle => this.createLogoRequest(logoParameters, fileHandle.fileId)))
+      .subscribe(response => this.getOutputData(response.id)
+        .subscribe(data => console.log(data)));
+  }
+
+  private uploadDataRawRequest(data: string): Observable<DataFileHandle> {
+    return this.httpClient.post<DataFileHandle>('/api/data/raw', data);
+  }
+
+  private createLogoRequest(logoParameters: LogoParameters, fileId: string): Observable<LogoRequest> {
+    return this.httpClient.post<LogoRequest>('/api/logo-requests', {fileId, params: logoParameters});
+  }
+
+  private getOutputData(logoRequestId: number): Observable<string> {
+    return this.httpClient.get<string>(`/api/data/${logoRequestId}/output`);
+  }
 }

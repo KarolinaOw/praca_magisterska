@@ -115,7 +115,8 @@
               </i>
             </div>
 
-            <textarea i18n class="textarea is-info is-light" placeholder="Lub wpisz sekwencję tutaj"></textarea>
+            <textarea i18n class="textarea is-info is-light" placeholder="Lub wpisz sekwencję tutaj"
+                      name="rawData" [(ngModel)]="rawData"></textarea>
           </div>
         </div>
       </div>
@@ -142,7 +143,7 @@
 
 
             <div class="select is-info">
-              <select required name="seqType" [(ngModel)] = "logoRequest.seqType">
+              <select required name="seqType" [(ngModel)] = "logoParameters.seqType">
                 <option i18n *ngFor="let t of sequenceTypes" [ngValue]="t">{{t}}</option>
               </select>
             </div>
@@ -157,7 +158,7 @@
 
             <label i18n class="label has-text-info	mr-4">Numer pierwszej pozycji</label>
             <div class="control">
-              <input i18n required class="input is-info" type="text" name="firstPosNumber" placeholder="1" [(ngModel)]="logoRequest.firstPosNumber">
+              <input i18n required class="input is-info" type="text" name="firstPosNumber" placeholder="1" [(ngModel)]="logoParameters.firstPosNumber">
             </div>
 
           </div>
@@ -186,7 +187,7 @@
             <label i18n class="label has-text-info	mr-4">Tytuł</label>
 
             <div class="control">
-              <input i18n class="input is-info" type="text" name="title" placeholder="Sequence Logo" [(ngModel)]="logoRequest.title">
+              <input i18n class="input is-info" type="text" name="title" placeholder="Sequence Logo" [(ngModel)]="logoParameters.title">
             </div>
           </div>
 
@@ -200,7 +201,7 @@
 
             <label i18n class="label has-text-info	mr-4">Podpis osi X</label>
             <div class="control">
-              <input i18n class="input is-info" type="text" name="axisX" placeholder="Information content [bits]" [(ngModel)]="logoRequest.xAxis">
+              <input i18n class="input is-info" type="text" name="axisX" placeholder="Information content [bits]" [(ngModel)]="logoParameters.xAxis">
             </div>
           </div>
 
@@ -214,7 +215,7 @@
 
             <label i18n class="label has-text-info	mr-4">Podpis osi Y</label>
             <div class="control">
-              <input i18n class="input is-info" type="text" name="axisY" placeholder="Position" [(ngModel)]="logoRequest.yAxis">
+              <input i18n class="input is-info" type="text" name="axisY" placeholder="Position" [(ngModel)]="logoParameters.yAxis">
             </div>
           </div>
 
@@ -230,7 +231,7 @@
 
             <div class="control mb-2 pl-4">
               <label class="radio" *ngFor="let c of colorSchemes">
-                <input i18n type="radio" name="rsvp" [checked] = "logoRequest.colors === c" (change) = "onColorSelectionChange(c)">
+                <input i18n type="radio" name="rsvp" [checked] = "logoParameters.colors === c" (change) = "onColorSelectionChange(c)">
                 {{c}}
               </label>
 
