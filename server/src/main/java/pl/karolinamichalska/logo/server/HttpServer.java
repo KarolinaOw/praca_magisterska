@@ -4,16 +4,14 @@ import com.google.common.net.InetAddresses;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
-import org.jboss.resteasy.plugins.server.servlet.FilterDispatcher;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
 import javax.annotation.PostConstruct;
@@ -59,6 +57,14 @@ public class HttpServer {
         context.setBaseResource(Resource.newClassPathResource("/static/web"));
         context.addEventListener(guiceResteasyBootstrapServletContextListener);
 
+        ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
+        errorHandler.addErrorPage(404, "/");
+        context.setErrorHandler(errorHandler);
+
+        context.addFilter(
+                SinglePageAppHttpFilter.class,
+                "/*",
+                EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
         context.addServlet(DefaultServlet.class, "/*");
         context.addServlet(HttpServletDispatcher.class, "/api/*");
 

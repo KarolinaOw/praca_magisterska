@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {environment} from "./environment";
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {LogoParameters, LogoRequest} from './model';
-import {mergeMap, Observable} from 'rxjs';
+import {LogoParameters, LogoRequest, LogoRequestStatus} from './model';
+import {map, mergeMap, Observable} from 'rxjs';
 import {DataFileHandle} from "./dataFileHandle";
 
 
@@ -10,8 +9,6 @@ import {DataFileHandle} from "./dataFileHandle";
   providedIn: 'root'
 })
 export class LogoService {
-
-  URL = environment.API_URL; // endpoint URL
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -22,11 +19,19 @@ export class LogoService {
   constructor(private httpClient: HttpClient) {
   }
 
-  createLogoFromRawData(logoParameters: LogoParameters, data: string): void {
-    this.uploadDataRawRequest(data)
+  createLogoFromRawData(logoParameters: LogoParameters, data: string): Observable<number> {
+    return this.uploadDataRawRequest(data)
       .pipe(mergeMap(fileHandle => this.createLogoRequest(logoParameters, fileHandle.fileId)))
-      .subscribe(response => this.getOutputData(response.id)
-        .subscribe(data => console.log(data)));
+      .pipe(map(response => response.id));
+  }
+
+  getLogoRequestStatus(logoRequestId: number): Observable<LogoRequestStatus> {
+    return this.httpClient.get<LogoRequest>(`/api/logo-requests/${logoRequestId}`)
+      .pipe(map(response => response.status));
+  }
+
+  getOutputData(logoRequestId: number): Observable<string> {
+    return this.httpClient.get(`/api/data/${logoRequestId}/output`, {responseType: "text"});
   }
 
   private uploadDataRawRequest(data: string): Observable<DataFileHandle> {
@@ -35,9 +40,5 @@ export class LogoService {
 
   private createLogoRequest(logoParameters: LogoParameters, fileId: string): Observable<LogoRequest> {
     return this.httpClient.post<LogoRequest>('/api/logo-requests', {fileId, params: logoParameters});
-  }
-
-  private getOutputData(logoRequestId: number): Observable<string> {
-    return this.httpClient.get<string>(`/api/data/${logoRequestId}/output`);
   }
 }
