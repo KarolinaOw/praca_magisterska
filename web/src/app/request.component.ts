@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {ColorScheme, LogoParameters, LogoRequestStatus, SequenceType} from "./model";
-import {Title} from "@angular/platform-browser";
 import {LogoService} from "./logo.service";
 import {interval, startWith, switchMap, takeWhile} from "rxjs";
 import {Router} from "@angular/router";
@@ -18,10 +17,8 @@ export class RequestComponent {
   colorSchemes: ColorScheme[] = ['auto', 'monochrome'];
   inProgress = false;
 
-  constructor(private titleService: Title,
-              private router: Router,
+  constructor(private router: Router,
               private logoService: LogoService) {
-    this.titleService.setTitle($localize`${this.titleService}`);
   }
 
   onSubmit() {
