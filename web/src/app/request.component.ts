@@ -47,9 +47,10 @@ export class RequestComponent {
         takeWhile(() => this.inProgress)
       )
       .subscribe(status => {
+        console.log(status);
         if (status === LogoRequestStatus.FINISHED) {
-          this.inProgress = false;
-          this.router.navigate(['results', logoRequestId]);
+          this.router.navigate(['results', logoRequestId])
+            .then(() => this.inProgress = false);
         }
       });
   }

@@ -12,10 +12,10 @@ export class LogoParameters {
 }
 
 export enum LogoRequestStatus {
-  NEW,
-  PENDING,
-  IN_PROGRESS,
-  FINISHED
+  NEW = 'NEW',
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  FINISHED = 'FINISHED'
 }
 
 export class LogoRequestInput {
