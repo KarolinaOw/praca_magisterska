@@ -2,6 +2,15 @@ package pl.karolinamichalska.logo.logo.submission;
 
 import com.google.cloud.dataproc.v1.Job;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.CharSink;
+import com.google.common.io.CharSource;
+import com.google.common.io.CharStreams;
+import org.apache.commons.collections.EnumerationUtils;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.karolinamichalska.logo.logo.data.DataFileHandle;
@@ -14,12 +23,10 @@ import pl.karolinamichalska.logo.spark.SparkJobService;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -81,6 +88,7 @@ public class LogoSubmissionService {
                 Optional.empty(),
                 logoRequest.id().orElseThrow(),
                 jobId,
+                Optional.empty(),
                 Optional.empty()));
         trackedLogoSubmissions.add(logoSubmission);
     }
@@ -94,8 +102,10 @@ public class LogoSubmissionService {
                             switch (job.getStatus().getState()) {
                                 case STATE_UNSPECIFIED -> Function.identity();
                                 case PENDING, SETUP_DONE -> req -> req.withStatus(LogoRequestStatus.PENDING);
-                                case RUNNING, CANCEL_PENDING, CANCEL_STARTED -> req -> req.withStatus(LogoRequestStatus.IN_PROGRESS);
-                                case CANCELLED, DONE, ERROR, ATTEMPT_FAILURE -> req -> req.withStatus(LogoRequestStatus.FINISHED);
+                                case RUNNING, CANCEL_PENDING, CANCEL_STARTED ->
+                                        req -> req.withStatus(LogoRequestStatus.IN_PROGRESS);
+                                case CANCELLED, DONE, ERROR, ATTEMPT_FAILURE ->
+                                        req -> req.withStatus(LogoRequestStatus.FINISHED);
                                 case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized status");
                             };
                     Optional<LogoRequest> logoRequest = logoRequestStorage.find(logoSubmission.logoRequestId())
@@ -110,7 +120,8 @@ public class LogoSubmissionService {
 
                     if (logoRequest.isPresent() && logoRequest.get().status().equals(LogoRequestStatus.FINISHED)) {
                         String outputFilePath = dataFileStorage.getOutputFilePath(DataFileHandle.of(logoRequest.get().fileId()));
-                        storage.store(logoSubmission.withOutputFilePath(outputFilePath));
+                        String formattedLogoFilePath = formatLogo(DataFileHandle.of(logoRequest.get().fileId()));
+                        storage.store(logoSubmission.withOutputFilePath(outputFilePath).withLogoFilePath(formattedLogoFilePath));
                     }
                 }
             } catch (Exception e) {
@@ -122,5 +133,45 @@ public class LogoSubmissionService {
                 Thread.currentThread().interrupt();
             }
         }
+    }
+
+    private String formatLogo(DataFileHandle handle) {
+        try (InputStream outputData = dataFileStorage.getOutputData(handle)) {
+            try (ByteArrayOutputStream logoOutStream = new ByteArrayOutputStream()) {
+
+                String params = ";";
+                // TODO params
+                try (SequenceInputStream sequenceInputStream = new SequenceInputStream(
+                        new ByteArrayInputStream(params.getBytes(StandardCharsets.UTF_8)),
+                        outputData)) {
+                    PumpStreamHandler streamHandler = new PumpStreamHandler(logoOutStream, System.err, sequenceInputStream);
+
+                    DefaultExecutor executor = new DefaultExecutor();
+                    executor.setStreamHandler(streamHandler);
+
+                    CommandLine cmd = CommandLine.parse("python -m logoformatter");
+                    int exitCode;
+                    try {
+                        exitCode = executor.execute(cmd);
+                    } catch (ExecuteException e) {
+                        throw new IllegalStateException(
+                                "Logo formatter failed, stdout: %s"
+                                        .formatted(logoOutStream.toString()),
+                                e);
+                    }
+                    if (exitCode != 0) {
+                        throw new IllegalStateException();
+                    }
+
+                    try (ByteArrayInputStream logoInputStream = new ByteArrayInputStream(logoOutStream.toByteArray())) {
+                        dataFileStorage.storeLogo(handle, logoInputStream);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        return dataFileStorage.getLogoFilePath(handle);
     }
 }

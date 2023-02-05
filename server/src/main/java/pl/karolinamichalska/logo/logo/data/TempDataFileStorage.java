@@ -70,4 +70,19 @@ public class TempDataFileStorage implements DataFileStorage {
     public boolean exists(DataFileHandle handle) {
         return fileIds.contains(handle.fileId());
     }
+
+    @Override
+    public void storeLogo(DataFileHandle handle, InputStream inputStream) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public InputStream getLogo(DataFileHandle handle) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String getLogoFilePath(DataFileHandle handle) {
+        throw new NotImplementedException();
+    }
 }

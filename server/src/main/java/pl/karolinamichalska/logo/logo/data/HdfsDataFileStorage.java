@@ -75,6 +75,21 @@ public class HdfsDataFileStorage implements DataFileStorage {
         }
     }
 
+    @Override
+    public void storeLogo(DataFileHandle handle, InputStream inputStream) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public InputStream getLogo(DataFileHandle handle) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String getLogoFilePath(DataFileHandle handle) {
+        throw new NotImplementedException();
+    }
+
     private org.apache.hadoop.fs.Path getAbsoluteBasePath() {
         return new org.apache.hadoop.fs.Path(fileSystem.getWorkingDirectory(), basePath);
     }

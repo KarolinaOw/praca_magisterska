@@ -1,4 +1,4 @@
-\#!/usr/bin/python
+#!/usr/bin/python
 
 from pyspark.sql.types import ArrayType, StructField, StructType, StringType, IntegerType
 import pyspark.sql.functions
@@ -41,9 +41,9 @@ info = freq.select('pos', 'A', 'T|U', 'G', 'C', ((log(2.0, lit(4)))+
                                                   when(col("T|U") != 0.0, col('T|U')*log(2.0,col('T|U'))).otherwise(0.0)+
                                                   when(col('G') != 0.0, col('G')*log(2.0,col('G'))).otherwise(0.0)+
                                                   when(col('C') != 0.0, col('C')*log(2.0,col('C'))).otherwise(0.0))).alias('info'))
-contribution = info.select('pos', 'info', (col('A')*col("info")).alias("con_A"), (col('T|U')*col("info")).alias("con_T|U"), (col('G')*col("info")).alias("con_G"), (col('C')*col("info")).alias("con_C"))
+contribution = info.select((col('A')*col("info")).alias("con_A"), (col('C')*col("info")).alias("con_C"), (col('G')*col("info")).alias("con_G"), (col('T|U')*col("info")).alias("con_T|U"))
 
 client = storage.Client()
 bucket = storage.Bucket(client, 'logo-seq-creator')
 blob = bucket.blob("logo-requests/output/" + os.path.basename(filename))
-blob.upload_from_string(contribution.toPandas().to_csv(), 'text/csv')
+blob.upload_from_string(contribution.toPandas().to_csv(index=False, header=False), 'text/csv')

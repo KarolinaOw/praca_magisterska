@@ -22,6 +22,7 @@ public class GsDataFileStorage implements DataFileStorage {
     private static final String BUCKET_NAME = "logo-seq-creator";
     private static final Path PATH_PREFIX = Path.of("logo-requests", "input-files");
     private static final Path OUTPUT_PATH_PREFIX = Path.of("logo-requests", "output");
+    private static final Path LOGO_PATH_PREFIX = Path.of("logo-requests", "logos");
 
     private final Storage storage;
 
@@ -70,5 +71,29 @@ public class GsDataFileStorage implements DataFileStorage {
     @Override
     public boolean exists(DataFileHandle handle) {
         return storage.get(BlobId.of(BUCKET_NAME, PATH_PREFIX.resolve(handle.fileId()).toString())).exists();
+    }
+
+    @Override
+    public void storeLogo(DataFileHandle handle, InputStream inputStream) {
+        Blob blob = storage.create(
+                BlobInfo.newBuilder(BUCKET_NAME, LOGO_PATH_PREFIX.resolve(handle.fileId()).toString())
+                        .build());
+        try (OutputStream output = Channels.newOutputStream((blob.writer()))) {
+            inputStream.transferTo(output);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public InputStream getLogo(DataFileHandle handle) {
+        return Channels.newInputStream(storage.get(
+                        BlobId.of(BUCKET_NAME, LOGO_PATH_PREFIX.resolve(handle.fileId()).toString()))
+                .reader());
+    }
+
+    @Override
+    public String getLogoFilePath(DataFileHandle handle) {
+        return "gs://%s/%s".formatted(BUCKET_NAME, LOGO_PATH_PREFIX.resolve(handle.fileId()));
     }
 }

@@ -18,5 +18,11 @@ public interface DataFileStorage {
 
     InputStream getOutputData(DataFileHandle handle);
 
+    void storeLogo(DataFileHandle handle, InputStream inputStream);
+
+    InputStream getLogo(DataFileHandle handle);
+
+    String getLogoFilePath(DataFileHandle handle);
+
     boolean exists(DataFileHandle handle);
 }

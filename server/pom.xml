@@ -92,6 +92,10 @@
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-dataproc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -149,6 +153,9 @@
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>3.3.1</version>
                 <configuration>
+                    <from>
+                        <image>docker://logo-generator-base</image>
+                    </from>
                     <to>
                         <image>gcr.io/amplified-bee-374812/logo-generator</image>
                     </to>

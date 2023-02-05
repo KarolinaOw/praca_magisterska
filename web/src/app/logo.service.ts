@@ -31,7 +31,7 @@ export class LogoService {
   }
 
   getOutputData(logoRequestId: number): Observable<string> {
-    return this.httpClient.get(`/api/data/${logoRequestId}/output`, {responseType: "text"});
+    return this.httpClient.get(`/api/data/${logoRequestId}/logo`, {responseType: "text"});
   }
 
   private uploadDataRawRequest(data: string): Observable<DataFileHandle> {

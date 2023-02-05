@@ -7,18 +7,8 @@ import pl.karolinamichalska.logo.logo.request.LogoRequest;
 import pl.karolinamichalska.logo.logo.request.LogoRequestStorage;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
+import javax.ws.rs.*;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +16,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
+import static javax.ws.rs.core.MediaType.*;
 
 @Path("api/data")
 public class DataResource {
@@ -74,6 +62,20 @@ public class DataResource {
         InputStream dataInput = dataFileStorage.getOutputData(DataFileHandle.of(logoRequest.fileId()));
         BufferedReader reader = new BufferedReader(new InputStreamReader(dataInput, StandardCharsets.UTF_8));
         return reader.lines().collect(Collectors.joining("\n"));
+    }
+
+    @GET
+    @Path("{id}/logo")
+    @Produces("image/svg+xml")
+    public byte[] getLogo(@PathParam("id") long logoRequestId) {
+        LogoRequest logoRequest = logoRequestStorage.find(logoRequestId)
+                .orElseThrow(() -> new NotFoundException("Logo Request not found"));
+        InputStream dataInput = dataFileStorage.getLogo(DataFileHandle.of(logoRequest.fileId()));
+        try {
+            return dataInput.readAllBytes();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private static InputStream toInputStream(InputPart inputPart) {
