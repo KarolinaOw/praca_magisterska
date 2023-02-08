@@ -109,8 +109,7 @@ public class LogoSubmissionService {
                                 case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized status");
                             };
                     Optional<LogoRequest> logoRequest = logoRequestStorage.find(logoSubmission.logoRequestId())
-                            .map(transformer)
-                            .map(logoRequestStorage::store);
+                            .map(transformer);
 
                     logoRequest.ifPresentOrElse(
                             req -> Optional.of(req.status())
@@ -123,6 +122,8 @@ public class LogoSubmissionService {
                         String formattedLogoFilePath = formatLogo(DataFileHandle.of(logoRequest.get().fileId()));
                         storage.store(logoSubmission.withOutputFilePath(outputFilePath).withLogoFilePath(formattedLogoFilePath));
                     }
+
+                    logoRequest.ifPresent(logoRequestStorage::store);
                 }
             } catch (Exception e) {
                 log.warn("Exception thrown in submission tracking thread", e);

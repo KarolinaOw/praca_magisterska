@@ -8,4 +8,6 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
+
+    <logger name="com.google.cloud.sql.core.CoreSocketFactory" level="WARN"/>
 </configuration>
