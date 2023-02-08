@@ -9,7 +9,7 @@ public class LogoRequestModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(LogoRequestStorage.class).to(InMemoryLogoRequestStorage.class).in(SINGLETON);
+        bind(LogoRequestStorage.class).to(RdbmsLogoRequestStorage.class).in(SINGLETON);
         bind(LogoRequestService.class).in(SINGLETON);
         bind(LogoRequestResource.class);
     }

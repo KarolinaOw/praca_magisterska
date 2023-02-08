@@ -11,17 +11,13 @@
 
 <nav class="navbar" role="navigation" aria-label="dropdown navigation">
   <a class="navbar-item has-background-primary">
-    <strong>Logo sequence creator</strong>
+    <strong>Logocraft</strong>
     <!--      background-color="3B945E", color=""182628-->
   </a>
 
   <div class="navbar-item has-dropdown is-active">
 
     <div class="navbar">
-      <a i18n class="navbar-item">
-        Co to jest logo sekwencji?</a>
-      <a i18n class="navbar-item">
-        Jak posługiwać się kreatorem?</a>
       <hr class="navbar-divider">
       <div i18n class="navbar-item">
         Wersja beta
@@ -53,45 +49,50 @@
     </div>-->
 </nav>
 
-<div class="file has-name mt-6 is-justify-content-center">
-  <div class="content">
-    <h2 i18n class="has-text-info">Witaj w kreatorze logo sekwencji</h2>
-    <div class="divider is-info is-light is-full">
-    </div>
-    <p i18n class="is-info">Tutaj będzie krótki opis po co powstała aplikacja.</p>
-  </div>
-</div>
+<div class="container">
 
-<div class="file has-name mt-6 is-justify-content-center">
-  <div class="content">
-    <h2 i18n class="has-text-centered has-text-info">Jak posługiwać się kreatorem?</h2>
-    <div class="divider is-info is-light is-full"></div>
-    <p i18n>Aby sworzyć logo należy wczytać plik z interesującymi nas sekwencjami lub wprowadzić je w okno dialogowe.
-      Następnie (opcjonalnie) wybrać dodatkowe, dostępne opcje.</p>
-  </div>
-</div>
 
-<div class="file has-name mt-6 is-justify-content-center">
-  <div class="content">
-    <h2 i18n class="has-text-centered has-text-info">Stwórz logo</h2>
-    <div class="divider is-info is-light is-full">
+  <div class="file has-name mt-6 is-justify-content-center">
+    <div class="content">
+      <h2 i18n class="has-text-centered has-text-info">Witaj w kreatorze logo sekwencji</h2>
+      <div class="divider is-info is-light is-full">
+      </div>
+      <p i18n class="has-text-centered is-info">Aplikacja powstała w celu umożliwienia analizy dużych zbiorów danych. Prosty i intuicyjny
+        interfejs ma za zadanie pomóc mniej doświadczonym użytkownikom.</p>
     </div>
   </div>
-</div>
+
+  <div class="file has-name mt-6 is-justify-content-center">
+    <div class="content">
+      <h2 i18n class="has-text-centered has-text-info">Jak posługiwać się kreatorem?</h2>
+      <div class="divider is-info is-light is-full"></div>
+      <p i18n>Aby sworzyć logo należy wczytać plik z interesującymi nas sekwencjami lub wprowadzić je w okno dialogowe.
+        Następnie (opcjonalnie) wybrać dodatkowe, dostępne opcje. Pamiętej, że dane muszą zostać uprzednio dopasowane
+        (np. w narzędziu Kalign3, BLAST lub Clustal Omega)!</p>
+    </div>
+  </div>
+
+  <div class="file has-name mt-6 is-justify-content-center">
+    <div class="content">
+      <h2 i18n class="has-text-centered has-text-info">Stwórz logo</h2>
+      <div class="divider is-info is-light is-full">
+      </div>
+    </div>
+  </div>
 
 
-<div class="container is-widescreen">
+  <div class="container is-widescreen">
 
-  <form #logoForm="ngForm" (ngSubmit)="onSubmit()">
+    <form #logoForm="ngForm" (ngSubmit)="onSubmit()">
 
-    <div class="columns">
+      <div class="columns">
 
-      <!--    Blok wybrania pliku-->
-      <div class="column">
-        <div class="file is-info has-name is-medium is-centered mb-5 is-fullwidth">
-          <label class="file-label">
-            <input class="file-input" type="file" name="resume">
-            <span class="file-cta">
+        <!--    Blok wybrania pliku-->
+        <div class="column">
+          <div class="file is-info has-name is-medium is-centered mb-5 is-fullwidth">
+            <label class="file-label">
+              <input class="file-input" type="file" name="resume">
+              <span class="file-cta">
       <span class="file-icon">
         <i class="fas fa-upload"></i>
       </span>
@@ -99,170 +100,171 @@
         Wybierz plik z dysku
       </span>
     </span>
-            <span i18n class="file-name">
+              <span i18n class="file-name">
       Nie wybrano pliku
     </span>
-          </label>
-        </div>
-
-        <!--Blok wpisania sekwencji-->
-        <div class="control">
-
-          <div class="icon-text">
-            <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
-              <i class="fas fa-info-circle"></i>
-            </i>
-          </div>
-
-          <textarea i18n class="textarea is-info is-light" placeholder="Lub wpisz sekwencję tutaj"
-                    name="rawData" [(ngModel)]="rawData"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <div class="columns">
-
-      <!--    First column-->
-      <div class="column">
-        <div class="content">
-          <h4 i18n class="has-text-centered has-text-info">Opcje loga</h4>
-        </div>
-
-        <div class="divider is-info is-light is-full">
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="icon-text">
-            <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
-              <i class="fas fa-info-circle"></i>
-            </i>
-          </div>
-
-          <label i18n class="label has-text-info	mr-4">Typ sekwencji</label>
-
-
-          <div class="select is-info">
-            <select required name="seqType" [(ngModel)]="logoParameters.seqType">
-              <option i18n *ngFor="let t of sequenceTypes" [ngValue]="t">{{t}}</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="icon-text">
-            <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
-              <i class="fas fa-info-circle"></i>
-            </i>
-          </div>
-
-          <label i18n class="label has-text-info	mr-4">Numer pierwszej pozycji</label>
-          <div class="control">
-            <input i18n required class="input is-info" type="text" name="firstPosNumber" placeholder="1"
-                   [(ngModel)]="logoParameters.firstPosNumber">
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="divider is-info is-light is-vertical is is-fullv"></div>
-
-      <!--    Second column-->
-      <div class="column">
-
-        <div class="content">
-          <h4 i18n class="has-text-centered has-text-info">Opcje obrazu</h4>
-        </div>
-
-        <div class="divider is-info is-light is-full">
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="icon-text">
-            <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Tutaj dodasz tytuł obrazu.">
-              <i class="fas fa-info-circle"></i>
-            </i>
-          </div>
-
-          <label i18n class="label has-text-info	mr-4">Tytuł</label>
-
-          <div class="control">
-            <input i18n class="input is-info" type="text" name="title" placeholder="Sequence Logo"
-                   [(ngModel)]="logoParameters.title">
-          </div>
-        </div>
-
-
-        <div class="field is-horizontal">
-          <div class="icon-text">
-            <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Tutaj dodasz podpis osi X.">
-              <i class="fas fa-info-circle"></i>
-            </i>
-          </div>
-
-          <label i18n class="label has-text-info	mr-4">Podpis osi X</label>
-          <div class="control">
-            <input i18n class="input is-info" type="text" name="axisX" placeholder="Information content [bits]"
-                   [(ngModel)]="logoParameters.xAxis">
-          </div>
-        </div>
-
-
-        <div class="field is-horizontal">
-          <div class="icon-text">
-            <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Tutaj dodasz podpis osi Y.">
-              <i class="fas fa-info-circle"></i>
-            </i>
-          </div>
-
-          <label i18n class="label has-text-info	mr-4">Podpis osi Y</label>
-          <div class="control">
-            <input i18n class="input is-info" type="text" name="axisY" placeholder="Position"
-                   [(ngModel)]="logoParameters.yAxis">
-          </div>
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="icon-text">
-            <i i18n class="icon has-text-info has-tooltip-multiline pr-2"
-               data-tooltip="Tutaj wybierzesz paletę barw loga.">
-              <i class="fas fa-info-circle"></i>
-            </i>
-          </div>
-
-          <label i18n class="label has-text-info">Paleta barw</label>
-
-          <div class="control mb-2 pl-4">
-            <label class="radio" *ngFor="let c of colorSchemes">
-              <input i18n type="radio" name="rsvp" [checked]="logoParameters.colors === c"
-                     (change)="onColorSelectionChange(c)">
-              {{c}}
             </label>
+          </div>
 
+          <!--Blok wpisania sekwencji-->
+          <div class="control">
+
+            <div class="icon-text">
+              <i class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+                <i class="fas fa-info-circle"></i>
+              </i>
+            </div>
+
+            <textarea i18n class="textarea is-info is-light" placeholder="Lub wpisz sekwencję tutaj"
+                      name="rawData" [(ngModel)]="rawData"></textarea>
           </div>
         </div>
       </div>
 
-    </div>
+      <div class="columns">
 
-    <!--Buttons-->
-    <div class="columns">
-      <div class="column is-two-thirds">
-        <div class="buttons">
-          <button i18n class="button is-info is-rounded is-fullwidth" [disabled]="inProgress">Stwórz logo</button>
+        <!--    First column-->
+        <div class="column">
+          <div class="content">
+            <h4 i18n class="has-text-centered has-text-info">Opcje loga</h4>
+          </div>
+
+          <div class="divider is-info is-light is-full">
+          </div>
+
+          <div class="field is-horizontal">
+            <div class="icon-text">
+              <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+                <i class="fas fa-info-circle"></i>
+              </i>
+            </div>
+
+            <label i18n class="label has-text-info	mr-4">Typ sekwencji</label>
+
+
+            <div class="select is-info">
+              <select required name="seqType" [(ngModel)]="logoParameters.seqType">
+                <option i18n *ngFor="let t of sequenceTypes" [ngValue]="t">{{t}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field is-horizontal">
+            <div class="icon-text">
+              <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Opis tej opcji.">
+                <i class="fas fa-info-circle"></i>
+              </i>
+            </div>
+
+            <label i18n class="label has-text-info	mr-4">Numer pierwszej pozycji</label>
+            <div class="control">
+              <input i18n required class="input is-info" type="text" name="firstPosNumber" placeholder="1"
+                     [(ngModel)]="logoParameters.firstPosNumber">
+            </div>
+
+          </div>
+
         </div>
-      </div>
-      <div class="column">
-        <div class="buttons">
-          <button i18n class="button is-info is-light is-rounded is-fullwidth" (click)="toDefaultValues()">Wyczyść
-          </button>
+
+        <div class="divider is-info is-light is-vertical is is-fullv"></div>
+
+        <!--    Second column-->
+        <div class="column">
+
+          <div class="content">
+            <h4 i18n class="has-text-centered has-text-info">Opcje obrazu</h4>
+          </div>
+
+          <div class="divider is-info is-light is-full">
+          </div>
+
+          <div class="field is-horizontal">
+            <div class="icon-text">
+              <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Tutaj dodasz tytuł obrazu.">
+                <i class="fas fa-info-circle"></i>
+              </i>
+            </div>
+
+            <label i18n class="label has-text-info	mr-4">Tytuł</label>
+
+            <div class="control">
+              <input i18n class="input is-info" type="text" name="title" placeholder="Sequence Logo"
+                     [(ngModel)]="logoParameters.title">
+            </div>
+          </div>
+
+
+          <div class="field is-horizontal">
+            <div class="icon-text">
+              <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Tutaj dodasz podpis osi X.">
+                <i class="fas fa-info-circle"></i>
+              </i>
+            </div>
+
+            <label i18n class="label has-text-info	mr-4">Podpis osi X</label>
+            <div class="control">
+              <input i18n class="input is-info" type="text" name="axisX" placeholder="Information content [bits]"
+                     [(ngModel)]="logoParameters.xAxis">
+            </div>
+          </div>
+
+
+          <div class="field is-horizontal">
+            <div class="icon-text">
+              <i i18n class="icon has-text-info has-tooltip-multiline pr-2" data-tooltip="Tutaj dodasz podpis osi Y.">
+                <i class="fas fa-info-circle"></i>
+              </i>
+            </div>
+
+            <label i18n class="label has-text-info	mr-4">Podpis osi Y</label>
+            <div class="control">
+              <input i18n class="input is-info" type="text" name="axisY" placeholder="Position"
+                     [(ngModel)]="logoParameters.yAxis">
+            </div>
+          </div>
+
+          <div class="field is-horizontal">
+            <div class="icon-text">
+              <i i18n class="icon has-text-info has-tooltip-multiline pr-2"
+                 data-tooltip="Tutaj wybierzesz paletę barw loga.">
+                <i class="fas fa-info-circle"></i>
+              </i>
+            </div>
+
+            <label i18n class="label has-text-info">Paleta barw</label>
+
+            <div class="control mb-2 pl-4">
+              <label class="radio" *ngFor="let c of colorSchemes">
+                <input i18n type="radio" name="rsvp" [checked]="logoParameters.colors === c"
+                       (change)="onColorSelectionChange(c)">
+                {{c}}
+              </label>
+
+            </div>
+          </div>
         </div>
+
       </div>
 
-    </div>
+      <!--Buttons-->
+      <div class="columns">
+        <div class="column is-two-thirds">
+          <div class="buttons">
+            <button i18n class="button is-info is-rounded is-fullwidth" [disabled]="inProgress">Stwórz logo</button>
+          </div>
+        </div>
+        <div class="column">
+          <div class="buttons">
+            <button i18n class="button is-info is-light is-rounded is-fullwidth" (click)="toDefaultValues()">Wyczyść
+            </button>
+          </div>
+        </div>
 
-  </form>
+      </div>
 
+    </form>
+
+  </div>
 </div>
 
 <!--<aside class="menu">-->

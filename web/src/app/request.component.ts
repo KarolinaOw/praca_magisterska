@@ -13,7 +13,7 @@ export class RequestComponent {
 
   logoParameters: LogoParameters = new LogoParameters();
   rawData: string = '';
-  sequenceTypes: SequenceType[] = ['auto', 'aminoAcid', 'dna', 'rna'];
+  sequenceTypes: SequenceType[] = ['auto', 'dna', 'rna'];
   colorSchemes: ColorScheme[] = ['auto', 'monochrome'];
   inProgress = false;
 

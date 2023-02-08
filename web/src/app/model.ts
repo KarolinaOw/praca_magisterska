@@ -1,4 +1,4 @@
-export type SequenceType = 'auto' | 'aminoAcid' | 'dna' | 'rna';
+export type SequenceType = 'auto' | 'dna' | 'rna';
 export type ColorScheme = 'auto' | 'monochrome';
 export type Color = 'red' | 'blue' | 'green' | 'yellow' | 'orange' | 'black';
 

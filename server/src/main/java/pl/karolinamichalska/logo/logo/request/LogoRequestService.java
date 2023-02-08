@@ -1,5 +1,6 @@
 package pl.karolinamichalska.logo.logo.request;
 
+import com.google.api.gax.rpc.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.karolinamichalska.logo.logo.data.DataFileHandle;
@@ -62,12 +63,15 @@ public class LogoRequestService {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 for (LogoRequest newRequest : storage.findAll(Set.of(LogoRequestStatus.NEW))) {
-                    logoSubmissionService.submit(newRequest);
-                    storage.store(newRequest.withStatus(LogoRequestStatus.PENDING));
+                    try {
+                        logoSubmissionService.submit(newRequest);
+                        storage.store(newRequest.withStatus(LogoRequestStatus.PENDING));
+                    } catch (ApiException e) {
+                        storage.store(newRequest.withStatus(LogoRequestStatus.FINISHED));
+                    }
                 }
             } catch (Exception e) {
                 log.warn("Exception thrown in job submitting thread", e);
-                throw e;
             }
             try {
                 TimeUnit.MILLISECONDS.sleep(100);

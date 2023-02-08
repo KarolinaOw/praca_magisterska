@@ -11,7 +11,7 @@ public class LogoSubmissionModule extends AbstractModule {
     protected void configure() {
         install(new SparkModule());
 
-        bind(LogoSubmissionStorage.class).to(InMemoryLogoSubmissionStorage.class).in(SINGLETON);
+        bind(LogoSubmissionStorage.class).to(RdbmsLogoSubmissionStorage.class).in(SINGLETON);
         bind(LogoSubmissionService.class).in(SINGLETON);
     }
 }
