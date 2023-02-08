@@ -149,7 +149,7 @@ public class LogoSubmissionService {
                     DefaultExecutor executor = new DefaultExecutor();
                     executor.setStreamHandler(streamHandler);
 
-                    CommandLine cmd = CommandLine.parse("python -m logoformatter");
+                    CommandLine cmd = CommandLine.parse("python3 -m logoformatter");
                     int exitCode;
                     try {
                         exitCode = executor.execute(cmd);

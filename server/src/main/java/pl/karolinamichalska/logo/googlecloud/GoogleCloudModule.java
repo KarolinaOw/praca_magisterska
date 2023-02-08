@@ -27,8 +27,8 @@ public class GoogleCloudModule extends AbstractModule {
         // Set up URL parameters
         String jdbcURL = String.format("jdbc:postgresql:///%s", DB_NAME);
         Properties connProps = new Properties();
-        connProps.setProperty("user", "karolinamichalska48@gmail.com");
-        connProps.setProperty("password", "password");
+        connProps.setProperty("user", System.getenv("DB_USER"));
+        connProps.setProperty("password", System.getenv("DB_PASS"));
         connProps.setProperty("sslmode", "disable");
         connProps.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory");
         connProps.setProperty("cloudSqlInstance", "amplified-bee-374812:europe-central2:logo-seq-creator");

@@ -173,7 +173,7 @@
                 <version>3.3.1</version>
                 <configuration>
                     <from>
-                        <image>docker://logo-generator-base</image>
+                        <image>gcr.io/amplified-bee-374812/logo-generator-base@sha256:63c7a57c0f490d766189c56fb5294dcefce6d0c14b5f99bdafa7caddd3edb67d</image>
                     </from>
                     <to>
                         <image>gcr.io/amplified-bee-374812/logo-generator</image>
