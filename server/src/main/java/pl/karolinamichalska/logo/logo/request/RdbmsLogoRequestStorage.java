@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Objects.requireNonNull;
@@ -65,9 +66,14 @@ public class RdbmsLogoRequestStorage implements LogoRequestStorage {
 
     @Override
     public Set<LogoRequest> findAll(Set<LogoRequestStatus> statuses) {
+        if (statuses.isEmpty()) {
+            return Set.of();
+        }
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM logo_request WHERE status IN (<statuses>)")
-                        .bindList("statuses", statuses)
+                        .bindList("statuses", statuses.stream()
+                                .map(LogoRequestStatus::name)
+                                .collect(Collectors.toSet()))
                         .map(new LogoRequestRowMapper(objectMapper))
                         .stream()
                         .collect(toImmutableSet()));

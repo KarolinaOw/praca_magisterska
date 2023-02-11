@@ -27,7 +27,7 @@ export class ResultsComponent {
 
   initZoom() {
     const svg = d3.select("svg");
-    const zoomFn = d3.zoom().on('zoom', (event) => {
+    const zoomFn = d3.zoom().scaleExtent([1,40]).on('zoom', (event) => {
       svg.attr("transform", event.transform);
     });
     // @ts-ignore
