@@ -83,6 +83,10 @@
 
   <div class="container is-widescreen">
 
+    <div class="notification is-danger" *ngIf="showError">
+      Wystąpił problem techniczny, nie udało się stworzyć logo. Spróbuj ponownie później.
+    </div>
+
     <form #logoForm="ngForm" (ngSubmit)="onSubmit()">
 
       <div class="columns">
@@ -91,7 +95,7 @@
         <div class="column">
           <div class="file is-info has-name is-medium is-centered mb-5 is-fullwidth">
             <label class="file-label">
-              <input class="file-input" type="file" name="resume">
+              <input class="file-input" type="file" name="file" (change)="onFileSelected($event)" #fileUpload>
               <span class="file-cta">
       <span class="file-icon">
         <i class="fas fa-upload"></i>

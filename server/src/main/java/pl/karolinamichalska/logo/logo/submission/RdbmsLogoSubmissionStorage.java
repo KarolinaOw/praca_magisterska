@@ -50,7 +50,7 @@ public class RdbmsLogoSubmissionStorage implements LogoSubmissionStorage {
 
     @Override
     public Optional<LogoSubmission> findByRequestId(long logoRequestId) {
-        return jdbi.withHandle(handle -> handle.createQuery("SELECT * FROM logo_submission WHERE logo_request_id = : logoRequestId")
+        return jdbi.withHandle(handle -> handle.createQuery("SELECT * FROM logo_submission WHERE logo_request_id = :logoRequestId")
                 .bind("logoRequestId", logoRequestId)
                 .map(new LogoSubmissionRowMapper())
                 .findOne());

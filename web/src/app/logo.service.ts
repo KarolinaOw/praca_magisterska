@@ -19,6 +19,12 @@ export class LogoService {
   constructor(private httpClient: HttpClient) {
   }
 
+  createLogoFromFile(logoParameters: LogoParameters, file: File): Observable<number> {
+    return this.uploadDataFileRequest(file)
+      .pipe(mergeMap(fileHandle => this.createLogoRequest(logoParameters, fileHandle.fileId)))
+      .pipe(map(response => response.id));
+  }
+
   createLogoFromRawData(logoParameters: LogoParameters, data: string): Observable<number> {
     return this.uploadDataRawRequest(data)
       .pipe(mergeMap(fileHandle => this.createLogoRequest(logoParameters, fileHandle.fileId)))
@@ -32,6 +38,12 @@ export class LogoService {
 
   getOutputData(logoRequestId: number): Observable<string> {
     return this.httpClient.get(`/api/data/${logoRequestId}/logo`, {responseType: "text"});
+  }
+
+  private uploadDataFileRequest(file: File): Observable<DataFileHandle> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.httpClient.post<DataFileHandle>('/api/data/file', formData)
   }
 
   private uploadDataRawRequest(data: string): Observable<DataFileHandle> {
