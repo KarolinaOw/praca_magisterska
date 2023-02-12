@@ -74,6 +74,7 @@ public class HttpServer {
     @PostConstruct
     public void start() throws Exception {
         server.start();
+        server.join();
     }
 
     @PreDestroy

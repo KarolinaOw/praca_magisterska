@@ -13,6 +13,7 @@
     <modules>
         <module>web</module>
         <module>server</module>
+        <module>data</module>
     </modules>
 
     <dependencyManagement>

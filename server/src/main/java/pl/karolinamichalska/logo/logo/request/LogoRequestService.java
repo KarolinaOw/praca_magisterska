@@ -3,6 +3,7 @@ package pl.karolinamichalska.logo.logo.request;
 import com.google.api.gax.rpc.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.karolinamichalska.logo.lock.LockManager;
 import pl.karolinamichalska.logo.logo.data.DataFileHandle;
 import pl.karolinamichalska.logo.logo.data.DataFileStorage;
 import pl.karolinamichalska.logo.logo.submission.LogoSubmissionService;
@@ -26,13 +27,18 @@ public class LogoRequestService {
     private final LogoRequestStorage storage;
     private final DataFileStorage dataFileStorage;
     private final LogoSubmissionService logoSubmissionService;
+    private final LockManager lockManager;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Inject
-    public LogoRequestService(LogoRequestStorage storage, DataFileStorage dataFileStorage, LogoSubmissionService logoSubmissionService) {
+    public LogoRequestService(LogoRequestStorage storage,
+                              DataFileStorage dataFileStorage,
+                              LogoSubmissionService logoSubmissionService,
+                              LockManager lockManager) {
         this.storage = requireNonNull(storage, "storage is null");
         this.dataFileStorage = requireNonNull(dataFileStorage, "dataFileStorage is null");
         this.logoSubmissionService = requireNonNull(logoSubmissionService, "logoSubmissionService is null");
+        this.lockManager = requireNonNull(lockManager, "lockManager is null");
     }
 
     @PostConstruct
@@ -63,12 +69,15 @@ public class LogoRequestService {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 for (LogoRequest newRequest : storage.findAll(Set.of(LogoRequestStatus.NEW))) {
-                    try {
-                        logoSubmissionService.submit(newRequest);
-                        storage.store(newRequest.withStatus(LogoRequestStatus.PENDING));
-                    } catch (ApiException e) {
-                        storage.store(newRequest.withStatus(LogoRequestStatus.FINISHED));
-                    }
+                    lockManager.performLockedOrIgnore(newRequest.fileId(), () -> {
+                        try {
+                            logoSubmissionService.submit(newRequest);
+                            storage.store(newRequest.withStatus(LogoRequestStatus.PENDING));
+                        } catch (ApiException e) {
+                            storage.store(newRequest.withStatus(LogoRequestStatus.FINISHED));
+                        }
+                        return null;
+                    });
                 }
             } catch (Exception e) {
                 log.warn("Exception thrown in job submitting thread", e);

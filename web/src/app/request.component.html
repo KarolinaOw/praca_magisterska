@@ -57,7 +57,8 @@
       <h2 i18n class="has-text-centered has-text-info">Witaj w kreatorze logo sekwencji</h2>
       <div class="divider is-info is-light is-full">
       </div>
-      <p i18n class="has-text-centered is-info">Aplikacja powstała w celu umożliwienia analizy dużych zbiorów danych. Prosty i intuicyjny
+      <p i18n class="has-text-centered is-info">Aplikacja powstała w celu umożliwienia analizy dużych zbiorów danych.
+        Prosty i intuicyjny
         interfejs ma za zadanie pomóc mniej doświadczonym użytkownikom.</p>
     </div>
   </div>
@@ -97,16 +98,16 @@
             <label class="file-label">
               <input class="file-input" type="file" name="file" (change)="onFileSelected($event)" #fileUpload>
               <span class="file-cta">
-      <span class="file-icon">
-        <i class="fas fa-upload"></i>
-      </span>
-      <span i18n class="file-label is-info">
-        Wybierz plik z dysku
-      </span>
-    </span>
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span i18n class="file-label is-info">
+                  Wybierz plik z dysku
+                </span>
+              </span>
               <span i18n class="file-name">
-      Nie wybrano pliku
-    </span>
+                {{file ? file.name : "Nie wybrano pliku"}}
+              </span>
             </label>
           </div>
 

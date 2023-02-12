@@ -33,3 +33,8 @@ export class LogoRequest {
 export class DataFileHandle {
   fileId: string;
 }
+
+export class UploadableDataFileHandle {
+  fileId: string;
+  signedUrl: string;
+}

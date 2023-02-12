@@ -12,11 +12,15 @@ public interface DataFileStorage {
      */
     DataFileHandle storeData(Stream<InputStream> inputStreams);
 
+    UploadableDataFileHandle getSignedUrl();
+
     String getPath(DataFileHandle handle);
 
     String getOutputFilePath(DataFileHandle handle);
 
     InputStream getOutputData(DataFileHandle handle);
+
+    boolean outputExists(DataFileHandle handle);
 
     void storeLogo(DataFileHandle handle, InputStream inputStream);
 

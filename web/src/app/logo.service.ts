@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {LogoParameters, LogoRequest, LogoRequestStatus} from './model';
+import {LogoParameters, LogoRequest, LogoRequestStatus, DataFileHandle, UploadableDataFileHandle} from './model';
 import {map, mergeMap, Observable} from 'rxjs';
-import {DataFileHandle} from "./dataFileHandle";
 
 
 @Injectable({
@@ -41,9 +40,17 @@ export class LogoService {
   }
 
   private uploadDataFileRequest(file: File): Observable<DataFileHandle> {
-    const formData = new FormData();
-    formData.append("file", file);
-    return this.httpClient.post<DataFileHandle>('/api/data/file', formData)
+    return this.httpClient.post<UploadableDataFileHandle>('/api/data/file', null)
+      .pipe(mergeMap(uploadable => this.uploadObject(uploadable, file)));
+  }
+
+  private uploadObject(handle: UploadableDataFileHandle, file: File): Observable<DataFileHandle> {
+    const headers: HttpHeaders = new HttpHeaders();
+    headers.set('Content-Type', 'application/octet-stream');
+    return this.httpClient.put(handle.signedUrl, file, {headers})
+      .pipe(map(() => {
+          return {fileId: handle.fileId}
+        }));
   }
 
   private uploadDataRawRequest(data: string): Observable<DataFileHandle> {

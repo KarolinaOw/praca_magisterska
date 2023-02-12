@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://logo-generator-inzfvgia3a-lm.a.run.app"],
+    "method": ["PUT", "POST"],
+    "responseHeader": ["Content-Type", "x-guploader-uploadid", "server", "date", "content-length", "alt-svc"],
+    "maxAgeSeconds": 3600
+  }
+]

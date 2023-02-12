@@ -1,18 +1,18 @@
 package pl.karolinamichalska.logo.logo.data;
 
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.*;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -52,6 +52,18 @@ public class GsDataFileStorage implements DataFileStorage {
     }
 
     @Override
+    public UploadableDataFileHandle getSignedUrl() {
+        String fileId = UUID.randomUUID().toString();
+        Blob blob = storage.create(
+                BlobInfo.newBuilder(BUCKET_NAME, PATH_PREFIX.resolve(fileId).toString())
+                        .build());
+        URL url = blob.signUrl(60 * 10, TimeUnit.SECONDS,
+                Storage.SignUrlOption.withV4Signature(),
+                Storage.SignUrlOption.httpMethod(HttpMethod.PUT));
+        return new UploadableDataFileHandle(fileId, url.toString());
+    }
+
+    @Override
     public String getPath(DataFileHandle handle) {
         return "gs://%s/%s".formatted(BUCKET_NAME, PATH_PREFIX.resolve(handle.fileId()));
     }
@@ -69,8 +81,15 @@ public class GsDataFileStorage implements DataFileStorage {
     }
 
     @Override
+    public boolean outputExists(DataFileHandle handle) {
+        Blob blob = storage.get(BlobId.of(BUCKET_NAME, OUTPUT_PATH_PREFIX.resolve(handle.fileId()).toString()));
+        return blob != null && blob.exists();
+    }
+
+    @Override
     public boolean exists(DataFileHandle handle) {
-        return storage.get(BlobId.of(BUCKET_NAME, PATH_PREFIX.resolve(handle.fileId()).toString())).exists();
+        Blob blob = storage.get(BlobId.of(BUCKET_NAME, PATH_PREFIX.resolve(handle.fileId()).toString()));
+        return blob != null && blob.exists();
     }
 
     @Override

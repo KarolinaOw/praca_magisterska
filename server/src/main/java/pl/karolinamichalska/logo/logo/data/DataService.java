@@ -27,7 +27,7 @@ public class DataService {
         }
     }
 
-    public DataFileHandle storeDataFile(Stream<InputStream> dataStreams) {
-        return dataFileStorage.storeData(dataStreams);
+    public UploadableDataFileHandle storeDataFile() {
+        return dataFileStorage.getSignedUrl();
     }
 }

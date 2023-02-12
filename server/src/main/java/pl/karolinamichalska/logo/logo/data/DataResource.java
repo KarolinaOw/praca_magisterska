@@ -1,8 +1,6 @@
 package pl.karolinamichalska.logo.logo.data;
 
-
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import pl.karolinamichalska.logo.logo.request.LogoRequest;
 import pl.karolinamichalska.logo.logo.request.LogoRequestStorage;
 
@@ -10,13 +8,11 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static javax.ws.rs.core.MediaType.*;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 @Path("api/data")
 public class DataResource {
@@ -42,15 +38,9 @@ public class DataResource {
 
     @POST
     @Path("file")
-    @Consumes(MULTIPART_FORM_DATA)
     @Produces(APPLICATION_JSON)
-    public DataFileHandle uploadDataFile(MultipartFormDataInput input) {
-
-        Map<String, List<InputPart>> formDataMap = input.getFormDataMap();
-        List<InputPart> file = formDataMap.get("file");
-        checkArgument(file != null && !file.isEmpty(), "Uploaded file cannot be empty");
-
-        return dataService.storeDataFile(input.getParts().stream().map(DataResource::toInputStream));
+    public UploadableDataFileHandle uploadDataFile() {
+        return dataService.storeDataFile();
     }
 
     @GET

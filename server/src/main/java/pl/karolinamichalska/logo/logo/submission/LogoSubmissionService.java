@@ -2,17 +2,13 @@ package pl.karolinamichalska.logo.logo.submission;
 
 import com.google.cloud.dataproc.v1.Job;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharSink;
-import com.google.common.io.CharSource;
-import com.google.common.io.CharStreams;
-import org.apache.commons.collections.EnumerationUtils;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.karolinamichalska.logo.lock.LockManager;
 import pl.karolinamichalska.logo.logo.data.DataFileHandle;
 import pl.karolinamichalska.logo.logo.data.DataFileStorage;
 import pl.karolinamichalska.logo.logo.request.LogoRequest;
@@ -26,7 +22,6 @@ import javax.inject.Inject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +38,7 @@ public class LogoSubmissionService {
     private final SparkJobService sparkJobService;
     private final DataFileStorage dataFileStorage;
     private final LogoRequestStorage logoRequestStorage;
+    private final LockManager lockManager;
     private final Set<LogoSubmission> trackedLogoSubmissions = Collections.synchronizedSet(new HashSet<>());
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -50,11 +46,13 @@ public class LogoSubmissionService {
     public LogoSubmissionService(LogoSubmissionStorage storage,
                                  SparkJobService sparkJobService,
                                  DataFileStorage dataFileStorage,
-                                 LogoRequestStorage logoRequestStorage) {
+                                 LogoRequestStorage logoRequestStorage,
+                                 LockManager lockManager) {
         this.storage = requireNonNull(storage, "storage is null");
         this.sparkJobService = requireNonNull(sparkJobService, "sparkJobService is null");
         this.dataFileStorage = requireNonNull(dataFileStorage, "dataFileStorage is null");
         this.logoRequestStorage = requireNonNull(logoRequestStorage, "logoRequestStorage is null");
+        this.lockManager = requireNonNull(lockManager, "lockManager is null");
     }
 
     @PostConstruct
@@ -97,33 +95,44 @@ public class LogoSubmissionService {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 for (LogoSubmission logoSubmission : ImmutableSet.copyOf(trackedLogoSubmissions)) {
-                    Job job = sparkJobService.getJob(logoSubmission.jobId());
-                    Function<LogoRequest, LogoRequest> transformer =
-                            switch (job.getStatus().getState()) {
-                                case STATE_UNSPECIFIED -> Function.identity();
-                                case PENDING, SETUP_DONE -> req -> req.withStatus(LogoRequestStatus.PENDING);
-                                case RUNNING, CANCEL_PENDING, CANCEL_STARTED ->
-                                        req -> req.withStatus(LogoRequestStatus.IN_PROGRESS);
-                                case CANCELLED, DONE, ERROR, ATTEMPT_FAILURE ->
-                                        req -> req.withStatus(LogoRequestStatus.FINISHED);
-                                case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized status");
-                            };
-                    Optional<LogoRequest> logoRequest = logoRequestStorage.find(logoSubmission.logoRequestId())
-                            .map(transformer);
+                    Boolean removeSubmission = lockManager.performLockedOrIgnore(logoSubmission.jobId(), () -> {
+                        Job job = sparkJobService.getJob(logoSubmission.jobId());
+                        Function<LogoRequest, LogoRequest> transformer =
+                                switch (job.getStatus().getState()) {
+                                    case STATE_UNSPECIFIED -> Function.identity();
+                                    case PENDING, SETUP_DONE -> req -> req.withStatus(LogoRequestStatus.PENDING);
+                                    case RUNNING, CANCEL_PENDING, CANCEL_STARTED ->
+                                            req -> req.withStatus(LogoRequestStatus.IN_PROGRESS);
+                                    case CANCELLED, DONE, ERROR, ATTEMPT_FAILURE ->
+                                            req -> req.withStatus(LogoRequestStatus.FINISHED);
+                                    case UNRECOGNIZED -> throw new IllegalArgumentException("Unrecognized status");
+                                };
+                        Optional<LogoRequest> logoRequest = logoRequestStorage.find(logoSubmission.logoRequestId())
+                                .map(transformer);
 
-                    logoRequest.ifPresentOrElse(
-                            req -> Optional.of(req.status())
-                                    .filter(status -> status.equals(LogoRequestStatus.FINISHED))
-                                    .ifPresent(ignored -> trackedLogoSubmissions.remove(logoSubmission)),
-                            () -> trackedLogoSubmissions.remove(logoSubmission));
+                        boolean shouldRemove = false;
+                        if (logoRequest.isEmpty()) {
+                            shouldRemove = true;
+                        }
 
-                    if (logoRequest.isPresent() && logoRequest.get().status().equals(LogoRequestStatus.FINISHED)) {
-                        String outputFilePath = dataFileStorage.getOutputFilePath(DataFileHandle.of(logoRequest.get().fileId()));
-                        String formattedLogoFilePath = formatLogo(DataFileHandle.of(logoRequest.get().fileId()));
-                        storage.store(logoSubmission.withOutputFilePath(outputFilePath).withLogoFilePath(formattedLogoFilePath));
+                        if (logoRequest.isPresent() && logoRequest.get().status().equals(LogoRequestStatus.FINISHED)) {
+                            DataFileHandle fileHandle = DataFileHandle.of(logoRequest.get().fileId());
+                            if (dataFileStorage.outputExists(fileHandle)) {
+                                String outputFilePath = dataFileStorage.getOutputFilePath(fileHandle);
+                                String formattedLogoFilePath = formatLogo(fileHandle);
+                                storage.store(logoSubmission.withOutputFilePath(outputFilePath).withLogoFilePath(formattedLogoFilePath));
+                                shouldRemove = true;
+                            }
+                        }
+
+                        logoRequest.ifPresent(logoRequestStorage::store);
+
+                        return shouldRemove;
+                    });
+
+                    if (removeSubmission != null && removeSubmission) {
+                        trackedLogoSubmissions.remove(logoSubmission);
                     }
-
-                    logoRequest.ifPresent(logoRequestStorage::store);
                 }
             } catch (Exception e) {
                 log.warn("Exception thrown in submission tracking thread", e);
